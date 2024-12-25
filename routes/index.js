@@ -7,6 +7,7 @@ const tropicsRoutes = require("./tropicsRoutes");
 const questionsRoutes = require("./questionsRoute");
 const questionPaperRoutes = require("./questionPaper");
 const userRoutes = require("./userRoutes");
+const modulesRoutes = require("./moduleRoutes");
 
 const router = express.Router();
 
@@ -18,5 +19,6 @@ router.use("/tropics", tropicsRoutes);
 router.use("/questions", questionsRoutes);
 router.use("/paper", questionPaperRoutes);
 router.use("/user", userRoutes);
+router.use("/modules", modulesRoutes);
 
 module.exports = router;
