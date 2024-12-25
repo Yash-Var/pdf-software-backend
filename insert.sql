@@ -79,3 +79,101 @@ CREATE TABLE `Question_Options` (
   KEY `question_id` (`question_id`),
   CONSTRAINT `fk_question_option_question` FOREIGN KEY (`question_id`) REFERENCES `Questions` (`question_id`) ON DELETE CASCADE
 );
+
+CREATE TABLE `Answers` (
+  `answer_id` int NOT NULL AUTO_INCREMENT,
+  `question_id` int NOT NULL,
+  `answer_text` text,
+  `is_correct` tinyint(1) DEFAULT NULL,
+  `matched_pair` text,
+  `response_code` varchar(240) DEFAULT NULL,
+  PRIMARY KEY (`answer_id`),
+  KEY `question_id` (`question_id`),
+  CONSTRAINT `fk_answer_question` FOREIGN KEY (`question_id`) REFERENCES `Questions` (`question_id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `Question_Papers` (
+  `paper_id` int NOT NULL AUTO_INCREMENT,
+  `heading` varchar(255) NOT NULL,
+  `exam_name` varchar(255) DEFAULT NULL,
+  `logo` varchar(255) DEFAULT NULL,
+  `class` varchar(50) NOT NULL,
+  `total_marks` int NOT NULL,
+  `subject_id` int NOT NULL,
+  `exam_date` date DEFAULT NULL,
+  `watermark_text` varchar(255) DEFAULT NULL,
+  `school_name` varchar(255) DEFAULT NULL,
+  `total_time` varchar(255) DEFAULT NULL,
+  `footer_address` text,
+  `footer_contact_info` varchar(255) DEFAULT NULL,
+  `font_size` int DEFAULT '12',
+  `watermark_placement` varchar(50) DEFAULT 'center',
+  `watermark_opacity` float DEFAULT '0.5',
+  `watermark_font_size` int DEFAULT '14',
+  `number_of_pages` int DEFAULT NULL,
+  `active` int DEFAULT '1',
+  PRIMARY KEY (`paper_id`),
+  KEY `subject_id` (`subject_id`),
+  CONSTRAINT `Question_Papers_ibfk_1` FOREIGN KEY (`subject_id`) REFERENCES `Subjects` (`subject_id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `Paper_Instructions` (
+  `instruction_id` int NOT NULL AUTO_INCREMENT,
+  `paper_id` int NOT NULL,
+  `instruction_text` text NOT NULL,
+  `instruction_order` int DEFAULT '1',
+  `active` int DEFAULT '1',
+  PRIMARY KEY (`instruction_id`),
+  KEY `paper_id` (`paper_id`),
+  CONSTRAINT `Paper_Instructions_ibfk_1` FOREIGN KEY (`paper_id`) REFERENCES `Question_Papers` (`paper_id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `Paper_Sections` (
+  `section_id` int NOT NULL AUTO_INCREMENT,
+  `paper_id` int NOT NULL,
+  `section_name` varchar(255) NOT NULL,
+  `marks_per_question` int NOT NULL,
+  `number_of_questions` int NOT NULL,
+  `total_section_marks` int NOT NULL,
+  `question_type` varchar(50) DEFAULT NULL,
+  `active` int DEFAULT '1',
+  PRIMARY KEY (`section_id`),
+  KEY `paper_id` (`paper_id`),
+  CONSTRAINT `Paper_Sections_ibfk_1` FOREIGN KEY (`paper_id`) REFERENCES `Question_Papers` (`paper_id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `Section_Instructions` (
+  `instruction_id` int NOT NULL AUTO_INCREMENT,
+  `section_id` int NOT NULL,
+  `instruction_text` text NOT NULL,
+  `instruction_order` int DEFAULT '1',
+  `active` int DEFAULT '1',
+  PRIMARY KEY (`instruction_id`),
+  KEY `section_id` (`section_id`),
+  CONSTRAINT `Section_Instructions_ibfk_1` FOREIGN KEY (`section_id`) REFERENCES `Paper_Sections` (`section_id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `Section_Questions` (
+  `section_question_id` int NOT NULL AUTO_INCREMENT,
+  `section_id` int NOT NULL,
+  `question_id` int NOT NULL,
+  `active` int DEFAULT '1',
+  PRIMARY KEY (`section_question_id`),
+  KEY `section_id` (`section_id`),
+  KEY `question_id` (`question_id`),
+  CONSTRAINT `Section_Questions_ibfk_1` FOREIGN KEY (`section_id`) REFERENCES `Paper_Sections` (`section_id`) ON DELETE CASCADE,
+  CONSTRAINT `Section_Questions_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `Questions` (`question_id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `Modules` (
+  `module_id` int NOT NULL AUTO_INCREMENT,
+  `Module_name` varchar(255) NOT NULL,
+  `class_id` int NOT NULL,
+  `board_id` int DEFAULT NULL,
+  `Chapter_id` int DEFAULT NULL,
+  `Tropic_id` int DEFAULT NULL,
+  `difficulty_level` varchar(255) DEFAULT NULL,
+  `subject_id` int DEFAULT NULL,
+  PRIMARY KEY (`module_id`),
+  UNIQUE KEY `module_id` (`module_id`)
+);
